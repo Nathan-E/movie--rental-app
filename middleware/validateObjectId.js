@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = function(req, res, next) {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id))
-    return res.status(404).send('Invalid ID.');
+export default async function (req, res, next) {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+
+  if (!isValid) return res.status(404).send('Invalid ID.');
   
   next();
 }
+

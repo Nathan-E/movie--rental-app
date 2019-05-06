@@ -1,24 +1,25 @@
-const request = require('supertest');
-const {
+import 'babel-polyfill';
+import  request from 'supertest';
+import  {
   Genre
-} = require('../../models/genre');
-const {
+} from '../../models/genre';
+import  {
   User
-} = require('../../models/user');
-const mongoose = require('mongoose');
+} from '../../models/user';
+import  mongoose from 'mongoose';
 
-let app = require('../../index');
+import app from '../../index';
 let server;
 
+
 describe('/api/genres', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     server = app;
-  })
-  afterEach(async () => {
+  });
+
+  afterAll(async () => {
+    await Genre.remove();
     server.close();
-    await Genre.deleteMany({});
-    // await mongoose.connection.close();
-    // await mongoose.connection.close()
   });
 
   describe('GET /', () => {
@@ -33,12 +34,13 @@ describe('/api/genres', () => {
 
       await Genre.collection.insertMany(genres);
 
-      const response = await request(server).get('/api/genres')
+      const response = await request(server).get('/api/genres');
+      
       expect(response.status).toBe(200);
       expect(response.body.length).toBe(2);
       expect(response.body.some(g => g.name === 'genre1')).toBeTruthy();
       expect(response.body.some(g => g.name === 'genre2')).toBeTruthy();
-    }, 10000);
+    }, 30000);
   });
 
   describe('GET /:id', () => {
@@ -46,27 +48,26 @@ describe('/api/genres', () => {
       const genre = new Genre({
         name: 'genre1'
       });
-      await genre.save();
+      const result = await genre.save();
 
-      await request(server).get('/api/genres/' + genre._id).then(res => {
+      await request(server).get(`/api/genres/${result._id}`).then(res => {
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('name', genre.name);
       });
-
-    }, 10000);
+    }, 30000);
 
     it('should return 404 if invalid id is passed', async () => {
       const res = await request(server).get('/api/genres/1');
 
       expect(res.status).toBe(404);
-    }, 10000);
+    }, 30000);
 
     it('should return 404 if no genre with the given id exists', async () => {
       const id = mongoose.Types.ObjectId();
       const res = await request(server).get('/api/genres/' + id);
 
       expect(res.status).toBe(404);
-    }, 10000);
+    }, 30000);
   });
 
   describe('POST /', () => {
@@ -89,7 +90,7 @@ describe('/api/genres', () => {
     beforeEach(() => {
       token = new User().generateAuthToken();
       name = 'genre1';
-    })
+    });
 
     it('should return 401 if client is not logged in', async () => {
       token = '';

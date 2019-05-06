@@ -1,16 +1,10 @@
-const {
-  Rental,
-  validate
-} = require('../models/rental');
-const {
-  Movie
-} = require('../models/movie');
-const {
-  Customer
-} = require('../models/customer');
-const mongoose = require('mongoose');
-const Fawn = require('fawn');
-const express = require('express');
+import { Rental, validate} from '../models/rental';
+import {Movie} from '../models/movie';
+import {Customer} from '../models/customer';
+import mongoose from 'mongoose';
+import Fawn from 'fawn';
+import express from 'express';
+
 const router = express.Router();
 
 Fawn.init(mongoose);
@@ -73,4 +67,4 @@ router.get('/:id', async (req, res) => {
   res.send(rental);
 });
 
-module.exports = router;
+export default router;

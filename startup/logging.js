@@ -1,8 +1,8 @@
-const winston = require('winston');
+import winston from 'winston';
 // require('winston-mongodb');
 require('express-async-errors');
 
-module.exports = function() {
+export default function() {
   winston.handleExceptions(
     new winston.transports.File({ filename: 'uncaughtExceptions.log' }));
   

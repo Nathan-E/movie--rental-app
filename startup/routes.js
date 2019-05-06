@@ -1,16 +1,26 @@
 const express = require('express');
-const genres = require('../routes/genres');
-const customers = require('../routes/customers');
-const movies = require('../routes/movies');
-const rentals = require('../routes/rentals');
-const users = require('../routes/users');
-const auth = require('../routes/auth');
-const error = require('../middleware/error');
+import {
+  router as genreRouter
+} from '../routes/genres';
+import {
+  router as customerRouter
+} from '../routes/customers';
+import movies from '../routes/movies';
+import rentals from '../routes/rentals';
+import users from '../routes/users';
+import auth from '../routes/auth';
+import error from '../middleware/error';
+import bodyParser from 'body-parser';
 
-module.exports = function(app) {
+
+export default function (app) {
   app.use(express.json());
-  app.use('/api/genres', genres);
-  app.use('/api/customers', customers);
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }));
+  app.use(bodyParser.json());
+  app.use('/api/genres', genreRouter);
+  app.use('/api/customers', customerRouter);
   app.use('/api/movies', movies);
   app.use('/api/rentals', rentals);
   app.use('/api/users', users);

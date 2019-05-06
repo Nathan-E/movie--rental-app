@@ -1,7 +1,7 @@
-const config = require('config');
-const jwt = require('jsonwebtoken');
-const Joi = require('joi');
-const mongoose = require('mongoose');
+import config from 'config';
+import jwt from 'jsonwebtoken';
+import Joi from 'joi';
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 255,
     unique: true
-  },
+  }, 
   password: {
     type: String,
     required: true,
@@ -48,5 +48,7 @@ function validateUser(user) {
   return Joi.validate(user, schema);
 }
 
-exports.User = User;
-exports.validate = validateUser;
+export {
+  User,
+  validateUser as validate
+};
